@@ -8,7 +8,7 @@ The scripts will also install git and clone the actual repository.
 
 ## Windows
 
-[Right click this link](https://github.com/u-blox/ubxlib_cellular_applications_xplr_iot/raw/master/install/install_windows.bat) and then chose "Save link as" in the browser to download the installation script for Windows. You will need to right click on the downloaded file and select `Properties` and click the `unblox` checkbox before you can run this batch file.
+[Right click this link](https://github.com/pauldeng/ubxlib_cellular_applications_xplr_iot/raw/master/install/install_windows.bat) and then chose "Save link as" in the browser to download the installation script for Windows. You will need to right click on the downloaded file and select `Properties` and click the `unblox` checkbox before you can run this batch file.
 
 Right click on the downloaded file and select "Run as administrator". The installation will then start and it is quite a lengthy process, typically ~10 min. **Please avoid** clicking in the window of this operation if you have "Quick Edit" for command windows enabled. Doing so may halt the downloading process which in turn can lead to timeouts and later problems for the installation.
 
@@ -20,7 +20,7 @@ The examples repository is installed in a sub directory to your home directory n
 
 ## Linux
 
-[Click this link](https://github.com/u-blox/ubxlib_cellular_applications_xplr_iot/raw/master/install/install_linux) and then chose "Save as" in the browser to download the installation script for Debian Linux. Once downloaded just run it. It will require sudo access as new packages will be installed. The installation will take some time so please be patient.
+[Click this link](https://github.com/pauldeng/ubxlib_cellular_applications_xplr_iot/raw/master/install/install_linux) and then chose "Save as" in the browser to download the installation script for Debian Linux. Once downloaded just run it. It will require sudo access as new packages will be installed. The installation will take some time so please be patient.
 
 When the installation has completed you should either log out and in again or run "source ~/.profile before doing any further operations related to this repository.
 
