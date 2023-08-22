@@ -176,7 +176,7 @@ rem ****************************************************************************
 :getRepository
 cd %ROOT_DIR%
 echo Getting the source code repositories... [%cd%]
-call git clone --recursive -q https://github.com/u-blox/%REPOSITORY%
+call git clone --recursive -q https://github.com/pauldeng/%REPOSITORY%
 
 rem ************************************************************************************
 :confBuildSettings
