@@ -103,12 +103,12 @@ static void doCellScan(void *pParams)
     char timestamp[TIMESTAMP_MAX_LENTH_BYTES];
     getTimeStamp(timestamp);
 
-    char format[] = "{"                 \
-            "\"Timestamp\":\"%s\", "    \
-            "\"CellSCan\":{"            \
-                "\"Name\":\"%s\", "     \
-                "\"ubxlibRAT\":\"%d\", "     \
-                "\"MCCMNC\":\"%s\"}"   \
+    char format[] = "{"                      \
+            "\"Timestamp\":%" PRId64 ","     \
+            "\"CellSCan\":{"                 \
+                "\"Name\":\"%s\","           \
+                "\"ubxlibRAT\":\"%d\","      \
+                "\"MCCMNC\":\"%s\"}"         \
         "}";
 
     writeLog("Scanning for networks...");
@@ -119,7 +119,7 @@ static void doCellScan(void *pParams)
             count = uCellNetScanGetNext(gDeviceHandle, internalBuffer, sizeof(internalBuffer), mccMnc, &rat)) {
 
         found++;
-        snprintf(payload, sizeof(payload), format, timestamp, internalBuffer, rat, mccMnc);
+        snprintf(payload, sizeof(payload), format, (unixNetworkTime + (uPortGetTickTimeMs() / 1000)), internalBuffer, rat, mccMnc);
         writeAlways(payload);
         sendMQTTMessage(topicName, payload, U_MQTT_QOS_AT_MOST_ONCE, false);
     }
