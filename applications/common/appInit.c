@@ -54,7 +54,7 @@ static uDeviceCfg_t deviceCfg;
 static bool buttonCommandEnabled = false;
 static buttonNumber_t pressedButton = NO_BUTTON;
 
-static int32_t appDwellTimeMS = 5000;
+static int32_t appDwellTimeMS = 60000;
 
 // This flag will pause the main application loop
 static bool pauseMainLoopIndicator = false;
