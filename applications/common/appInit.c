@@ -299,25 +299,18 @@ static bool initXplrDevice(void)
         displayLogLoop();
     }
 
+/*
     setLogLevel(LOGGING_LEVEL);
     startLogging(LOG_FILENAME);
 
     writeAlways("hello pdeng p1\n");
 
     closeLogFile(false);
+*/
 
     // Display the file system free size
     displayFileSpace(LOG_FILENAME);
 
-    setLogLevel(LOGGING_LEVEL);
-    startLogging(LOG_FILENAME);
-
-    writeAlways("hello pdeng p2\n");
-
-    closeLogFile(false);
-
-    // Display the file system free size
-    displayFileSpace(LOG_FILENAME);
 
     return true;
 }
