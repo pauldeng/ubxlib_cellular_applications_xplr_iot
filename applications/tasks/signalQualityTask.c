@@ -37,6 +37,9 @@
 
 #define JSON_STRING_LENGTH 300
 
+#define LOG_FILENAME "log.csv"
+#define LOGGING_LEVEL eINFO            // taken from logLevels_t
+
 /* ----------------------------------------------------------------
  * PUBLIC VARIABLES
  * -------------------------------------------------------------- */
@@ -130,7 +133,14 @@ static void measureSignalQuality(void)
                                 rsrp, rsrq, rssi, snr, rxqual, 
                                 cellId, earfcn, operatorMcc, operatorMnc, pOperatorName);
         sendMQTTMessage(topicName, jsonBuffer, U_MQTT_QOS_AT_MOST_ONCE, false);
-        writeAlways(jsonBuffer);
+        //printf("pdeng %d\n", displayFileSpace(LOG_FILENAME));
+        
+        setLogLevel(LOGGING_LEVEL);
+        startLogging(LOG_FILENAME);
+        writeAlways("SQ,%" PRId64 ",%d,%d,%d,%d,%d,\"%d\",\"%d\",\"%03d%02d\",\"%s\"", (unixNetworkTime + (uPortGetTickTimeMs() / 1000)), rsrp, rsrq, rssi, snr, rxqual, cellId, earfcn, operatorMcc, operatorMnc, pOperatorName);
+        closeLogFile(false);
+
+        printf("%s\n", jsonBuffer);
     } else {
         if (errorCode == U_CELL_ERROR_NOT_REGISTERED) {
             writeDebug("SignalQualityTask: Not registered");
@@ -223,7 +233,7 @@ int32_t initSignalQualityTask(taskConfig_t *config)
 
     CREATE_TOPIC_NAME;
 
-    writeLog("Initializing the %s task...", TASK_NAME);
+    printf("Initializing the %s task...\n", TASK_NAME);
     EXIT_ON_FAILURE(initMutex);
     EXIT_ON_FAILURE(initQueue);
 

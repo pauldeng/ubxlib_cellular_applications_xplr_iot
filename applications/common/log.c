@@ -111,7 +111,8 @@ int openFile(const char *filename, struct fs_file_t *file)
 {
     fs_file_t_init(file);
     const char *path = extFsPath(filename);
-    return fs_open(file, path, FS_O_APPEND | FS_O_CREATE | FS_O_RDWR);
+    int result = fs_open(file, path, FS_O_APPEND | FS_O_CREATE | FS_O_RDWR);
+    return result;
 }
 
 void setLogLevel(logLevels_t logLevel)
@@ -207,16 +208,20 @@ void displayLogFile(void)
                "********************************************************\n");
 }
 
-void displayFileSpace(const char *pFilename)
+uint32_t displayFileSpace(const char *pFilename)
 {
     uint32_t freeSpace = extFsFree() * 1024;
     printLog("File system free space: %u bytes", freeSpace);
 
     size_t fileSize;
     const char *path = extFsPath(pFilename);
-    if (extFsFileSize(path, &fileSize)) {
-        printLog("Log file size: %u bytes", fileSize);
+    if (extFsFileExists(pFilename)) {
+        if (extFsFileSize(path, &fileSize)) {
+            printLog("Log file size: %u bytes", fileSize);
+        }
     }
+
+    return freeSpace;
 }
 
 void deleteFile(const char *pFilename)

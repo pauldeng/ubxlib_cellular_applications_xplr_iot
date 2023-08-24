@@ -177,7 +177,7 @@ int32_t initLEDTask(taskConfig_t *config)
 
     int32_t result = U_ERROR_COMMON_SUCCESS;
 
-    writeLog("Initializing the %s task...", TASK_NAME);
+    printf("Initializing the %s task...\n", TASK_NAME);
     EXIT_ON_FAILURE(initMutex);
     EXIT_ON_FAILURE(initQueue);
 

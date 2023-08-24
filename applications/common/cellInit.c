@@ -61,7 +61,7 @@ static int32_t configureRAT(void)
 
 int32_t configureCellularModule(void)
 {
-    writeInfo("Configuring the cellular module...");
+    printf("Configuring the cellular module...\n");
 
     int32_t errorCode = configureMNOProfile();
     if (errorCode == 0)

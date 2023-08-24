@@ -109,7 +109,7 @@ static bool waitForTaskToStop(taskTypeId_t id)
     }
 
     while(isMutexLocked(taskRunner->config.handles.mutexHandle)) {
-        writeInfo("Waiting for %s task to stop...", taskRunner->config.name);
+        printf("Waiting for %s task to stop...\n", taskRunner->config.name);
         uPortTaskBlock(2000);
     }
 
@@ -143,7 +143,7 @@ void waitForAllTasksToStop()
 {
     bool stillWaiting;
 
-    writeLog("Waiting for app tasks to stop... This can take sometime if waiting for AT commands to timeout...");
+    printf("Waiting for app tasks to stop... This can take sometime if waiting for AT commands to timeout...\n");
     do
     {
         stillWaiting = false;
@@ -159,7 +159,7 @@ void waitForAllTasksToStop()
         uPortTaskBlock(100);
     } while (stillWaiting);
 
-    writeLog("All tasks have now finished...");
+    printf("All tasks have now finished...\n");
 }
 
 void stopAndWait(taskTypeId_t id)

@@ -124,10 +124,10 @@ static void mqttSendMessage(sendMQTTMsg_t msg)
         }
 
         if (errorCode == 0) {
-            writeDebug("Published MQTT message");
+            printf("Published MQTT message\n");
         } else {
             int32_t errValue = uMqttClientGetLastErrorCode(pContext);
-            writeWarn("Failed to publish MQTT message, %s error: ", errValue);
+            printf("Failed to publish MQTT message, %s error: \n", errValue);
         }
 
     } else {
@@ -190,7 +190,7 @@ static int32_t connectBroker(void)
     setIntParamFromConfig("MQTT_TIMEOUT", &(connection.inactivityTimeoutSeconds));
     setBoolParamFromConfig("MQTT_KEEPALIVE", "TRUE", &(connection.keepAlive));
 
-    writeLog("Connecting to %s on %s...", MQTT_TYPE_NAME, connection.pBrokerNameStr);
+    printf("Connecting to %s on %s...\n", MQTT_TYPE_NAME, connection.pBrokerNameStr);
 
     int32_t errorCode = uMqttClientConnect(pContext, &connection);
     if (errorCode != 0) {
@@ -210,7 +210,7 @@ static int32_t connectBroker(void)
         return errorCode;
     }
 
-    writeLog("Connected to %s", MQTT_TYPE_NAME);
+    printf("Connected to %s\n", MQTT_TYPE_NAME);
     gAppStatus = MQTT_CONNECTED;
 
     return 0;
@@ -223,7 +223,7 @@ static int32_t disconnectBroker(void)
         if (!gExitApp)
             writeError("Failed to disconnect from %s: %d", MQTT_TYPE_NAME, errorCode);
     } else {
-        writeLog("Disconnected from %s", MQTT_TYPE_NAME);
+        printf("Disconnected from %s\n", MQTT_TYPE_NAME);
     }
 
     return errorCode;
@@ -382,7 +382,7 @@ static void taskLoop(void *pParameters)
         if (!uMqttClientIsConnected(pContext)) {
             gAppStatus = MQTT_DISCONNECTED;
             if (IS_NETWORK_AVAILABLE) {
-                writeLog("MQTT client disconnected, trying to connect...");
+                printf("MQTT client disconnected, trying to connect...\n");
                 if (connectBroker() != U_ERROR_COMMON_SUCCESS)
                     uPortTaskBlock(5000);
             } else {
@@ -513,7 +513,7 @@ static void subscribeToTopic(void *pParam)
         goto cleanUp;
     }
 
-    writeLog("Subscribed to callback topic: %s", topicCallback->topicName);
+    printf("Subscribed to callback topic: %s\n", topicCallback->topicName);
     if (topicCallback->numCallbacks > 0) {
         printLog("With these commands:");
         for(int i=0; i<topicCallback->numCallbacks; i++)
@@ -732,17 +732,17 @@ int32_t sendMQTTMessage(const char *pTopicName, const char *pMessage, uMqttQos_t
 {
     // if the event queue handle is not valid, don't send the message
     if (TASK_QUEUE < 0) {
-        writeWarn("Not publishing MQTT message, MQTT Event Queue handle is not valid");
+        printf("Not publishing MQTT message, MQTT Event Queue handle is not valid\n");
         return U_ERROR_COMMON_NOT_INITIALISED;
     }
 
     if (!IS_NETWORK_AVAILABLE) {
-        writeWarn("Not publishing MQTT message, Network is not available at the moment");
+        printf("Not publishing MQTT message, Network is not available at the moment\n");
         return U_ERROR_COMMON_TEMPORARY_FAILURE;
     }
 
     if (pContext == NULL || !uMqttClientIsConnected(pContext)) {
-        writeWarn("Not publishing MQTT message, not connected to %s", MQTT_TYPE_NAME);
+        printf("Not publishing MQTT message, not connected to %s\n", MQTT_TYPE_NAME);
         return U_ERROR_COMMON_NOT_INITIALISED;
     }
 
@@ -810,7 +810,7 @@ int32_t initMQTTTask(taskConfig_t *config)
 
     int32_t result = U_ERROR_COMMON_SUCCESS;
 
-    writeLog("Initializing the %s task...", TASK_NAME);
+    printf("Initializing the %s task...\n", TASK_NAME);
     EXIT_ON_FAILURE(initMutex);
     EXIT_ON_FAILURE(initQueue);
     EXIT_ON_FAILURE(initMQTTClient);

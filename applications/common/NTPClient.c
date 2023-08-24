@@ -128,21 +128,21 @@ int64_t getNTPTime(void)
                     packet.txTm_s = ntohl(packet.txTm_s);
                     time = ( time_t ) ( packet.txTm_s - NTP_TIMESTAMP_DELTA );
                 } else {
-                    writeError("Failed to read NTP Packet from server: %d", errorCode);
+                    printf("Failed to read NTP Packet from server: %d\n", errorCode);
                 }
             } else {
-                writeError("Waiting for NTP response timed out.");
+                printf("Waiting for NTP response timed out.\n");
             }
         } else {
-            writeError("Failed to send NTP Packet to server: %d", errorCode);
+            printf("Failed to send NTP Packet to server: %d\n", errorCode);
         }
     } else {
-        writeError("Failed to get Time Service IP Address: %d", sock);
+        printf("Failed to get Time Service IP Address: %d\n", sock);
     }
 
     errorCode = uSockClose(sock);
     if (errorCode != 0) {
-        writeError("Failed to close socket: %d", errorCode);
+        printf("Failed to close socket: %d\n", errorCode);
     }
 
     return time;

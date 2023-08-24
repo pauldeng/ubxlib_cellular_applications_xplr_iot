@@ -67,11 +67,11 @@
                                 return errorCode;
 
 #define STOP_TASK               if (taskConfig == NULL) {                                               \
-                                    writeDebug("Stop %s task requested, but it is not initialised");    \
+                                    printf("Stop %s task requested, but it is not initialised\n");    \
                                     return U_ERROR_COMMON_NOT_INITIALISED;                              \
                                 }                                                                       \
                                 exitTask = true;                                                        \
-                                writeLog("Stop %s task requested...", taskConfig->name);                \
+                                printf("Stop %s task requested...\n", taskConfig->name);                \
                                 return U_ERROR_COMMON_SUCCESS;
 
 #define INIT_MUTEX              int32_t errorCode = uPortMutexCreate(&TASK_MUTEX);                      \

@@ -223,7 +223,7 @@ static int32_t startNetworkRegistration(void)
     }
 
     gAppStatus = REGISTERING;
-    writeLog("Bringing up the cellular network...");
+    printf("Bringing up the cellular network...\n");
     int32_t errorCode = uNetworkInterfaceUp(gDeviceHandle, gNetworkType, &gNetworkCfg);
     if (gExitApp) return U_ERROR_COMMON_SUCCESS;
 
@@ -243,7 +243,7 @@ static int32_t startNetworkRegistration(void)
     networkUpCounter=1;
 
     getNetworkInfo();
-    writeLog("Connected to Cellular Network: %s (%03d%02d)", pOperatorName, operatorMcc, operatorMnc);
+    printf("Connected to Cellular Network: %s (%03d%02d)\n", pOperatorName, operatorMcc, operatorMnc);
     return 0;
 }
 
@@ -253,12 +253,12 @@ static int32_t deRegisterFromNetwork(void)
         return U_ERROR_COMMON_SUCCESS;
 
     gAppStatus = REGISTERING;
-    writeLog("De-registering from the network...");
+    printf("De-registering from the network...\n");
     int32_t errorCode = uNetworkInterfaceDown(gDeviceHandle, gNetworkType);
     if (errorCode != 0) {
-        writeWarn("Failed to de-register from the cellular network: %d", errorCode);
+        printf("Failed to de-register from the cellular network: %d\n", errorCode);
     } else {
-        writeLog("Deregistered from cellular network");
+        printf("Deregistered from cellular network\n");
         gIsNetworkUp = false;
     }
 
@@ -353,7 +353,7 @@ int32_t initNetworkRegistrationTask(taskConfig_t *config)
 
     int32_t result = U_ERROR_COMMON_SUCCESS;
 
-    writeLog("Initializing the %s task...", TASK_NAME);
+    printf("Initializing the %s task...\n", TASK_NAME);
     EXIT_ON_FAILURE(initMutex);
     EXIT_ON_FAILURE(initQueue);
 

@@ -94,6 +94,6 @@ void closeLogFile(bool displayWarning);
 
 /// @brief Display the free space and log file size
 /// @param pFilename The log filename to check
-void displayFileSpace(const char *pFilename);
+uint32_t displayFileSpace(const char *pFilename);
 
 #endif

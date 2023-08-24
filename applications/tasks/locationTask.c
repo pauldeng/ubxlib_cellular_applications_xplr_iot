@@ -43,6 +43,9 @@
 
 #define FRACTION_FORMAT(v, d)   fractionConvert(v,&whole, &fraction, d), whole, fraction
 
+#define LOG_FILENAME "log.csv"
+#define LOGGING_LEVEL eINFO            // taken from logLevels_t
+
 /* ----------------------------------------------------------------
  * TYPE DEFINITIONS
  * -------------------------------------------------------------- */
@@ -154,7 +157,13 @@ static void publishLocation(uLocation_t location)
             location.timeUtc);
 
     sendMQTTMessage(topicName, jsonBuffer, U_MQTT_QOS_AT_MOST_ONCE, false);
-    writeAlways(jsonBuffer);
+
+    setLogLevel(LOGGING_LEVEL);
+    startLogging(LOG_FILENAME);
+    writeAlways("L,%" PRId64 ",%d,%c%d.%07d,%c%d.%07d,%d,%d,%" PRId64, (unixNetworkTime + (uPortGetTickTimeMs() / 1000)), location.altitudeMillimetres, FRACTION_FORMAT(location.latitudeX1e7,  TEN_MILLIONTH), FRACTION_FORMAT(location.longitudeX1e7, TEN_MILLIONTH), location.radiusMillimetres, location.speedMillimetresPerSecond, location.timeUtc);
+    closeLogFile(false);
+
+    printf("%s\n", jsonBuffer);
 }
 
 static void getLocation(void *pParams)
@@ -300,7 +309,7 @@ int32_t initLocationTask(taskConfig_t *config)
 
     CREATE_TOPIC_NAME;
 
-    writeLog("Initializing the %s task...", TASK_NAME);
+    printf("Initializing the %s task...\n", TASK_NAME);
     EXIT_ON_FAILURE(initMutex);
     EXIT_ON_FAILURE(initQueue);
 

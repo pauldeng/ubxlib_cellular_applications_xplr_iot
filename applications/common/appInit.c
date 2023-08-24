@@ -36,7 +36,7 @@ typedef enum {
  * -------------------------------------------------------------- */
 //#define UBXLIB_LOGGING_ON       // comment out for no ubxlib logging
 
-#define STARTUP_DELAY 250       // 250 * 20ms => 5 seconds
+#define STARTUP_DELAY 500       // 250 * 20ms => 5 seconds
 #define LOG_FILENAME "log.csv"
 #define MQTT_CREDENTIALS_FILENAME "mqttCredentials.txt"
 
@@ -54,7 +54,7 @@ static uDeviceCfg_t deviceCfg;
 static bool buttonCommandEnabled = false;
 static buttonNumber_t pressedButton = NO_BUTTON;
 
-static int32_t appDwellTimeMS = 60000;
+static int32_t appDwellTimeMS = 30000;
 
 // This flag will pause the main application loop
 static bool pauseMainLoopIndicator = false;
@@ -98,11 +98,11 @@ static buttonNumber_t checkStartButton(void)
     SET_RED_LED;
 
     // just wait 3 seconds for any terminal to be connected
-    uPortTaskBlock(3000);
+    uPortTaskBlock(6000);
 
     printLog("Button #1 = Display Log file");
     printLog("Button #2 = Delete  Log File");
-    printLog("Waiting 5 seconds for selection before running application...");
+    printLog("Waiting 10 seconds for selection before running application...");
 
     SET_BLUE_LED;
     // wait for 5 seconds, or if a button is pressed
@@ -150,18 +150,24 @@ static void button_pressed(int buttonNo, uint32_t holdTime)
         switch (buttonNo) {
             // EXIT APPLICATION 
             case BUTTON_1:
-                writeLog("Exit button pressed, closing down... Please wait for the RED LED to go out...");
+                printf("Button #1 pressed\n");
+                
+                printf("Exit button pressed, closing down... Please wait for the RED LED to go out...\n");
                 gExitApp = true;
+                
                 break;
 
             // BUTTON #2 action is set by the application via setButtonTwoFunction()
-            case BUTTON_2:                
+            case BUTTON_2:
+                printf("Button #2 pressed\n");
+                
                 if (buttonTwoFunc != NULL) {
-                    writeLog("Button #2 pressed");
+                    printf("Button #2 pressed\n");
                     buttonTwoFunc();
                 } else {
                     printDebug("No function defined for Button #2");
                 }
+                
                 break;
 
             default:
@@ -177,7 +183,7 @@ static void displayLog(bool printHelp)
     closeLogFile(false);
 
     if (printHelp) {
-        printf("\n\n\nYou can press Button #1 to display the log now still...");
+        printf("\n\n\nYou can press Button #1 to display the log now still...\n");
     }
 }
 
@@ -214,7 +220,7 @@ static int32_t getSerialNumber(void)
             gSerialNumber[len - 2] = 0;
         }
 
-        writeLog("Cellular Module Serial Number: %s", gSerialNumber);
+        printf("Cellular Module Serial Number: %s\n", gSerialNumber);
     }
 
     return len;
@@ -230,7 +236,7 @@ static int32_t initCellularDevice(void)
     uPortLogOff();
     #endif
 
-    writeLog("Initiating the UBXLIB Device API...");
+    printf("Initiating the UBXLIB Device API...\n");
     errorCode = uDeviceInit();
     if (errorCode != 0) {
         writeFatal("* Failed to initiate the UBXLIB device API: %d", errorCode);
@@ -239,7 +245,7 @@ static int32_t initCellularDevice(void)
 
     uDeviceGetDefaults(deviceType, &deviceCfg);
 
-    writeLog("Opening/Turning on the cellular module...");
+    printf("Opening/Turning on the cellular module...\n");
     errorCode = uDeviceOpen(&deviceCfg, &gDeviceHandle);
     if (errorCode != 0) {
         writeFatal("* Failed to turn on the cellular module: %d", errorCode);
@@ -283,7 +289,7 @@ static bool initXplrDevice(void)
 
     // deleting the log file is performed now before the start of the application
     if (button == BUTTON_2) {
-        printLog("Deleting log file...");
+        printf("Deleting log file...\n");
         deleteFile(LOG_FILENAME);
     }
 
@@ -295,6 +301,20 @@ static bool initXplrDevice(void)
 
     setLogLevel(LOGGING_LEVEL);
     startLogging(LOG_FILENAME);
+
+    writeAlways("hello pdeng p1\n");
+
+    closeLogFile(false);
+
+    // Display the file system free size
+    displayFileSpace(LOG_FILENAME);
+
+    setLogLevel(LOGGING_LEVEL);
+    startLogging(LOG_FILENAME);
+
+    writeAlways("hello pdeng p2\n");
+
+    closeLogFile(false);
 
     // Display the file system free size
     displayFileSpace(LOG_FILENAME);
@@ -333,9 +353,9 @@ static bool loadConfigFiles(void)
 
 static void displayAppVersion()
 {
-    writeInfo("**************************************************");
-    writeInfo("%s %s", APP_NAME, APP_VERSION);
-    writeInfo("**************************************************\n");
+    printf("**************************************************\n");
+    printf("%s %s\n", APP_NAME, APP_VERSION);
+    printf("**************************************************\n");
 }
 
 /// @brief Dwells for appDwellTimeMS time, and exits if this time changes
@@ -449,9 +469,9 @@ void finalize(applicationStates_t appState)
     SET_BLUE_LED;
     stopAndWait(NETWORK_REG_TASK);
 
-    writeLog("Application Finished.");
+    printf("Application Finished.\n");
 
-    closeLogFile(true);
+    //closeLogFile(true);
     uPortDeinit();
 
     SET_NO_LEDS;
