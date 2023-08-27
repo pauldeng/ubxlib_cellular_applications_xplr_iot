@@ -127,7 +127,7 @@ static void mqttSendMessage(sendMQTTMsg_t msg)
             writeDebug("Published MQTT message");
         } else {
             int32_t errValue = uMqttClientGetLastErrorCode(pContext);
-            writeWarn("Failed to publish MQTT message, %s error: ", errValue);
+            writeWarn("Failed to publish MQTT message, error: %d", errValue);
         }
 
     } else {
