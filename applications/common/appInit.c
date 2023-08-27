@@ -54,7 +54,7 @@ static uDeviceCfg_t deviceCfg;
 static bool buttonCommandEnabled = false;
 static buttonNumber_t pressedButton = NO_BUTTON;
 
-static int32_t appDwellTimeMS = 5000;
+static int32_t appDwellTimeMS = 60000;
 
 // This flag will pause the main application loop
 static bool pauseMainLoopIndicator = false;
@@ -97,8 +97,8 @@ static buttonNumber_t checkStartButton(void)
 {
     SET_RED_LED;
 
-    // just wait 3 seconds for any terminal to be connected
-    uPortTaskBlock(3000);
+    // Wait 5 seconds for any terminal to be connected
+    uPortTaskBlock(STARTUP_DELAY);
 
     printLog("Button #1 = Display Log file");
     printLog("Button #2 = Delete  Log File");
