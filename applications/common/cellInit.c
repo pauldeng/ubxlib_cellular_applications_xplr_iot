@@ -89,8 +89,8 @@ void displayCellularModuleInfo(void)
     
     // getIMxI functions return fixed chars, not a null terminated string (!)
     char imsi[U_CELL_INFO_IMSI_SIZE+1];
-    char imei[U_CELL_INFO_IMEI_SIZE+1];
-    imei[sizeof(imei)-1] = 0;
+    //char imei[U_CELL_INFO_IMEI_SIZE+1];
+    //imei[sizeof(imei)-1] = 0;
     imsi[sizeof(imsi)-1] = 0;
 
     int32_t count;
@@ -114,9 +114,9 @@ void displayCellularModuleInfo(void)
     else
         writeWarn("Cellular Module Firmware: Failed to get");
     
-    errorCode = uCellInfoGetImei(gDeviceHandle, imei);
+    errorCode = uCellInfoGetImei(gDeviceHandle, gSerialNumber);
     if (errorCode == 0)
-        writeInfo("Cellular Module IMEI: %s", imei);
+        writeInfo("Cellular Module IMEI: %s", gSerialNumber);
     else
         writeWarn("Cellular Module IMEI: Failed to get: %d", errorCode);
     
