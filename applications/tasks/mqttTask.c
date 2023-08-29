@@ -95,6 +95,7 @@ static mqttSNTopicNameNode_t *mqttSNTopicNameList = NULL;
 /* ----------------------------------------------------------------
  * STATIC FUNCTIONS
  * -------------------------------------------------------------- */
+static int32_t connectBroker(void);
 
 static bool isNotExiting(void)
 {
@@ -128,6 +129,15 @@ static void mqttSendMessage(sendMQTTMsg_t msg)
         } else {
             int32_t errValue = uMqttClientGetLastErrorCode(pContext);
             writeWarn("Failed to publish MQTT message, error: %d", errValue);
+            if (errValue == 34) {
+                errValue = uMqttClientDisconnect(pContext);
+                writeWarn("MQTT disconnect status: %d", errValue);
+                // disconnect status -9
+                // errvalue = 35
+                //errValue = disconnectBroker();
+                //writeWarn("MQTT disconnect status: %d", errValue);
+                connectBroker();
+            }
         }
 
     } else {
@@ -742,7 +752,7 @@ int32_t sendMQTTMessage(const char *pTopicName, const char *pMessage, uMqttQos_t
     }
 
     if (pContext == NULL || !uMqttClientIsConnected(pContext)) {
-        writeWarn("Not publishing MQTT message, not connected to %s", MQTT_TYPE_NAME);
+        //writeWarn("Not publishing MQTT message, not connected to %s", MQTT_TYPE_NAME);
         return U_ERROR_COMMON_NOT_INITIALISED;
     }
 
